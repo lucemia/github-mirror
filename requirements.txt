@@ -1,0 +1,4 @@
+bitbucket-api
+clime
+PyGithub
+simple-crypt
