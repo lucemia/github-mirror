@@ -19,16 +19,24 @@ def list_repo(org):
         yield repo.name
 
 
-def clone_repo(org):
+def clone_repos(org):
     for name in list_repo():
-        bb.repository.create(name)
-        os.system('git clone --mirror https://%s:%s@github.com/%s/%s.git' % (
-            github_user, github_pass, org, name))
-        os.chdir('%s.git' % name)
-        os.system('git remote set-url --push origin https://%s:%s@bitbucket.org/%s/%s.git' % (
-            bit_user, bit_pass, bit_user, name
-        ))
-        os.system("git push --mirror")
+        clone(org, name)
+
+
+def clone(org, name):
+    bb.repository.create(name)
+
+    os.system('git clone --mirror https://%s:%s@github.com/%s/%s.git' % (
+        github_user, github_pass, org, name))
+    os.chdir('%s.git' % name)
+    os.system('git remote set-url --push origin https://%s:%s@bitbucket.org/%s/%s.git' % (
+        bit_user, bit_pass, bit_user, name
+    ))
+    os.system("git push --mirror")
+    os.chdir("..")
+    os.system("rm -rf %s.git")
+
 
 if __name__ == "__main__":
     import clime.now
